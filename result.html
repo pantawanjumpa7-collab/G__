@@ -73,7 +73,7 @@
 
             <!-- =========================
                  RESULT PANEL
-            ========================== -->
+    ========================== -->
 
             <div class="result-panel">
 
@@ -135,7 +135,7 @@
 
             <!-- =========================
                  RECOMMENDATION
-            ========================== -->
+    ========================== -->
 
             <div class="reveal-container">
 
@@ -170,7 +170,7 @@
 
             <!-- =========================
                  FINAL MESSAGE
-            ========================== -->
+    ========================== -->
 
             <div
                 id="finalMessage"
@@ -202,7 +202,7 @@
 
             <!-- =========================
                  RESTART
-            ========================== -->
+    ========================== -->
 
             <button
                 id="restartBtn"
@@ -238,10 +238,12 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
+        // =========================================
+        // GET USER NAME & RESULT
+        // =========================================
 
-        // =========================================
-        // GET RESULT FROM APP.JS
-        // =========================================
+        const currentUserName =
+            (sessionStorage.getItem("currentUserName") || "").trim();
 
         const storedResult =
             sessionStorage.getItem(
@@ -339,16 +341,16 @@ document.addEventListener(
         // =========================================
 
         decisionScore.textContent =
-            `${result.totalScore} pts`;
+            `${result.score} pts`;
 
         confidence.textContent =
             `${result.confidence}%`;
 
         rulesFired.textContent =
-            result.firedRules.length;
+            result.rulesFired;
 
         systemDecision.textContent =
-            result.decision;
+            currentUserName ? `USER: ${currentUserName}` : "STANDARD_EVALUATION";
 
 
         // =========================================
@@ -412,7 +414,7 @@ document.addEventListener(
 
 
         // =========================================
-        // FINAL REVEAL
+        // FINAL REVEAL (CHECK IF TARGET IS "กิ๊ฟ")
         // =========================================
 
         function revealFinalResult() {
@@ -421,32 +423,54 @@ document.addEventListener(
                 "glitch"
             );
 
+            // เช็กเงื่อนไขชื่อ: ถ้าเป็น "กิ๊ฟ" ให้ปล่อย Easter Egg คลั่งรัก
+            if (currentUserName === "กิ๊ฟ") {
 
-            target.textContent =
-                "YOU";
+                target.textContent = "YOU";
 
+                setTimeout(
+                    () => {
 
-            setTimeout(
-                () => {
+                        target.textContent = "กิ๊ฟ";
+                        finalTitle.textContent =
+                            "ระบบเลือกคำตอบนี้";
+                        finalText.textContent =
+                            "หลังจากประมวลผลข้อมูลทั้งหมด " +
+                            "ผ่าน Knowledge Base และ Inference Engine " +
+                            "ระบบพบว่าคำตอบที่มีน้ำหนักมากที่สุด " +
+                            "คือคนที่คุณกำลังนึกถึงอยู่";
 
-                    target.textContent =
-                        "กิ๊ฟ";
-                    finalTitle.textContent =
-                        "ระบบเลือกคำตอบนี้";
-                    finalText.textContent =
-                        "หลังจากประมวลผลข้อมูลทั้งหมด " +
-                        "ผ่าน Knowledge Base และ Inference Engine " +
-                        "ระบบพบว่าคำตอบที่มีน้ำหนักมากที่สุด " +
-                        "คือคนที่คุณกำลังนึกถึงอยู่";
+                        finalMessage.classList.remove(
+                            "hidden"
+                        );
 
+                    },
+                    1200
+                );
 
-                    finalMessage.classList.remove(
-                        "hidden"
-                    );
+            } else {
 
-                },
-                1200
-            );
+                // ถ้าเป็นคนอื่น ให้แสดงผลลัพธ์แบบมาตรฐานทั่วไป
+                target.textContent = currentUserName ? currentUserName.toUpperCase() : "OPTIMAL_CHOICE";
+
+                setTimeout(
+                    () => {
+
+                        finalTitle.textContent =
+                            "วิเคราะห์ผลลัพธ์เสร็จสิ้น";
+                        finalText.textContent =
+                            "ระบบได้ประมวลผลตามเงื่อนไข Knowledge Base และ Rules ทางเลือก " +
+                            "คะแนนความมั่นใจอยู่ในระดับมาตรฐานของระบบ Expert System";
+
+                        finalMessage.classList.remove(
+                            "hidden"
+                        );
+
+                    },
+                    1200
+                );
+
+            }
 
         }
 
@@ -461,6 +485,10 @@ document.addEventListener(
 
                 sessionStorage.removeItem(
                     "decisionResult"
+                );
+
+                sessionStorage.removeItem(
+                    "currentUserName"
                 );
 
 
