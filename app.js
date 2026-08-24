@@ -106,6 +106,13 @@ startBtn.addEventListener(
 
 function startSystem() {
 
+    // ดึงชื่อจากช่อง Input ที่หน้าแรกมาเก็บไว้
+    const userNameInput = document.getElementById("userNameInput");
+    const userName = userNameInput ? userNameInput.value.trim() : "";
+    
+    sessionStorage.setItem("currentUserName", userName);
+
+
     hero.classList.add(
         "hidden"
     );
