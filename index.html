@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Expert System</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <header class="topbar">
+        <div class="brand">
+            <span class="status-dot"></span>
+            DECISION EXPERT SYSTEM
+        </div>
+
+        <div class="version">
+            SYSTEM v1.0
+        </div>
+    </header>
+
+    <main>
+
+        <section class="hero">
+            <div class="system-label">
+                EXPERT DECISION SUPPORT
+            </div>
+
+            <h1>
+                Decision<br>
+                <span>Analysis System</span>
+            </h1>
+
+            <p>
+                ระบบต้นแบบสำหรับวิเคราะห์ทางเลือก
+                โดยใช้ Rule-Based Reasoning และ Weighted Scoring
+            </p>
+
+            <button id="startBtn" class="primary-btn">
+                INITIALIZE SYSTEM
+            </button>
+        </section>
+
+
+        <section id="questionSection" class="question-section hidden">
+
+            <div class="progress-wrapper">
+
+                <div class="progress-info">
+                    <span id="questionNumber">01</span>
+                    <span id="totalQuestions">/ 07</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div id="progressBar"></div>
+                </div>
+
+            </div>
+
+
+            <div class="question-card">
+
+                <div class="question-category" id="questionCategory">
+                    ANALYSIS
+                </div>
+
+                <h2 id="questionText">
+                    Question
+                </h2>
+
+                <div id="answerContainer" class="answers">
+                </div>
+
+            </div>
+
+
+            <div class="navigation">
+
+                <button id="backBtn" class="secondary-btn">
+                    BACK
+                </button>
+
+                <button id="nextBtn" class="primary-btn" disabled>
+                    NEXT
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section id="processingSection" class="processing hidden">
+
+            <div class="loader"></div>
+
+            <p class="processing-title">
+                ANALYZING DATA
+            </p>
+
+            <p id="processingText">
+                Initializing inference engine...
+            </p>
+
+            <div class="terminal">
+
+                <div>> Loading Knowledge Base</div>
+                <div>> Initializing Rule Engine</div>
+                <div>> Evaluating facts</div>
+                <div>> Running inference</div>
+                <div>> Calculating confidence score</div>
+                <div class="terminal-cursor">_</div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+        Decision Expert System · Prototype
+    </footer>
+
+</div>
+
+
+<script src="js/knowledge-base.js"></script>
+<script src="js/inference-engine.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

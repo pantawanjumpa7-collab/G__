@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Decision Result</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+<div class="app-container">
+
+    <!-- =========================
+         TOP BAR
+    ========================== -->
+
+    <header class="topbar">
+
+        <div class="brand">
+
+            <span class="status-dot"></span>
+
+            DECISION EXPERT SYSTEM
+
+        </div>
+
+        <div class="version">
+
+            ANALYSIS RESULT
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         RESULT PAGE
+    ========================== -->
+
+    <main>
+
+        <section class="result-page">
+
+            <div class="system-label">
+
+                DECISION RESULT
+
+            </div>
+
+
+            <h1>
+
+                Analysis<br>
+
+                <span>Complete.</span>
+
+            </h1>
+
+
+            <!-- =========================
+                 RESULT PANEL
+            ========================== -->
+
+            <div class="result-panel">
+
+
+                <div class="result-row">
+
+                    <span>
+                        DECISION SCORE
+                    </span>
+
+                    <strong id="decisionScore">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        CONFIDENCE
+                    </span>
+
+                    <strong id="confidence">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        RULES FIRED
+                    </span>
+
+                    <strong id="rulesFired">
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div class="result-row">
+
+                    <span>
+                        SYSTEM DECISION
+                    </span>
+
+                    <strong id="systemDecision">
+                        --
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =========================
+                 RECOMMENDATION
+            ========================== -->
+
+            <div class="reveal-container">
+
+                <p class="muted">
+
+                    RECOMMENDED CHOICE
+
+                </p>
+
+
+                <div
+                    id="target"
+                    class="target-box"
+                >
+
+                    TARGET_01
+
+                </div>
+
+
+                <button
+                    id="revealBtn"
+                    class="primary-btn"
+                >
+
+                    REVEAL RESULT
+
+                </button>
+
+            </div>
+
+
+            <!-- =========================
+                 FINAL MESSAGE
+            ========================== -->
+
+            <div
+                id="finalMessage"
+                class="final-message hidden"
+            >
+
+                <div class="small-label">
+
+                    SYSTEM CONCLUSION
+
+                </div>
+
+
+                <h2 id="finalTitle">
+
+                    —
+
+                </h2>
+
+
+                <p id="finalText">
+
+                    —
+
+                </p>
+
+            </div>
+
+
+            <!-- =========================
+                 RESTART
+            ========================== -->
+
+            <button
+                id="restartBtn"
+                class="secondary-btn restart"
+            >
+
+                RUN ANALYSIS AGAIN
+
+            </button>
+
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        Decision Expert System · Prototype
+
+    </footer>
+
+</div>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+
+        // =========================================
+        // GET RESULT FROM APP.JS
+        // =========================================
+
+        const storedResult =
+            sessionStorage.getItem(
+                "decisionResult"
+            );
+
+
+        // =========================================
+        // ELEMENTS
+        // =========================================
+
+        const decisionScore =
+            document.getElementById(
+                "decisionScore"
+            );
+
+        const confidence =
+            document.getElementById(
+                "confidence"
+            );
+
+        const rulesFired =
+            document.getElementById(
+                "rulesFired"
+            );
+
+        const systemDecision =
+            document.getElementById(
+                "systemDecision"
+            );
+
+        const revealBtn =
+            document.getElementById(
+                "revealBtn"
+            );
+
+        const target =
+            document.getElementById(
+                "target"
+            );
+
+        const finalMessage =
+            document.getElementById(
+                "finalMessage"
+            );
+
+        const finalTitle =
+            document.getElementById(
+                "finalTitle"
+            );
+
+        const finalText =
+            document.getElementById(
+                "finalText"
+            );
+
+        const restartBtn =
+            document.getElementById(
+                "restartBtn"
+            );
+
+
+        // =========================================
+        // NO RESULT PROTECTION
+        // =========================================
+
+        if (!storedResult) {
+
+            decisionScore.textContent = "--";
+
+            confidence.textContent = "--";
+
+            rulesFired.textContent = "--";
+
+            systemDecision.textContent =
+                "NO DATA";
+
+            revealBtn.disabled = true;
+
+            return;
+
+        }
+
+
+        // =========================================
+        // PARSE RESULT
+        // =========================================
+
+        const result =
+            JSON.parse(storedResult);
+
+
+        // =========================================
+        // DISPLAY REAL RESULT
+        // =========================================
+
+        decisionScore.textContent =
+            `${result.totalScore} pts`;
+
+        confidence.textContent =
+            `${result.confidence}%`;
+
+        rulesFired.textContent =
+            result.firedRules.length;
+
+        systemDecision.textContent =
+            result.decision;
+
+
+        // =========================================
+        // REVEAL RESULT
+        // =========================================
+
+        revealBtn.addEventListener(
+            "click",
+            () => {
+
+                revealBtn.disabled = true;
+
+                target.classList.add(
+                    "glitch"
+                );
+
+
+                let counter = 0;
+
+                const messages = [
+                    "ANALYZING...",
+                    "CHECKING FACTS...",
+                    "MATCHING RULES...",
+                    "EVALUATING...",
+                    "FINALIZING..."
+                ];
+
+
+                const interval =
+                    setInterval(
+                        () => {
+
+                            if (
+                                counter <
+                                messages.length
+                            ) {
+
+                                target.textContent =
+                                    messages[counter];
+
+                                counter++;
+
+                            }
+
+                            else {
+
+                                clearInterval(
+                                    interval
+                                );
+
+                                revealFinalResult();
+
+                            }
+
+                        },
+                        500
+                    );
+
+            }
+        );
+
+
+        // =========================================
+        // FINAL REVEAL
+        // =========================================
+
+        function revealFinalResult() {
+
+            target.classList.remove(
+                "glitch"
+            );
+
+
+            target.textContent =
+                "YOU";
+
+
+            setTimeout(
+                () => {
+
+                    target.textContent =
+                        "กิ๊ฟ";
+                    finalTitle.textContent =
+                        "ระบบเลือกคำตอบนี้";
+                    finalText.textContent =
+                        "หลังจากประมวลผลข้อมูลทั้งหมด " +
+                        "ผ่าน Knowledge Base และ Inference Engine " +
+                        "ระบบพบว่าคำตอบที่มีน้ำหนักมากที่สุด " +
+                        "คือคนที่คุณกำลังนึกถึงอยู่";
+
+
+                    finalMessage.classList.remove(
+                        "hidden"
+                    );
+
+                },
+                1200
+            );
+
+        }
+
+
+        // =========================================
+        // RESTART
+        // =========================================
+
+        restartBtn.addEventListener(
+            "click",
+            () => {
+
+                sessionStorage.removeItem(
+                    "decisionResult"
+                );
+
+
+                window.location.href =
+                    "index.html";
+
+            }
+        );
+
+    }
+
+);
+</script>
+</body>
+</html>
